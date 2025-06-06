@@ -34,6 +34,7 @@
     "jsdom": "^26.0.0",
     "pnpm": "10.11.1",
     "prettier": "3.5.3",
+    "sass-embedded": "^1.89.1",
     "storybook": "^8.0.8",
     "storycap": "^5.0.0",
     "typescript": "5.8.3",

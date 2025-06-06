@@ -1,0 +1,15 @@
+:root {
+  --new-tab-bgc: rgb(32, 33, 36);
+}
+
+html,
+body,
+#root {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  background-color: var(--new-tab-bgc);
+  overflow: hidden;
+}

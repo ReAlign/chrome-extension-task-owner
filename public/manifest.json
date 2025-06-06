@@ -1,18 +1,13 @@
 {
-  "name": "BNTP: Bookmarks in New Tab Page",
+  "name": "Task",
   "version": "0.0.0.0",
-  "description": "Lightweight New Tab Page with Bookmarks and Top Sites",
+  "description": "A Chrome Extension for Task Management",
   "permissions": [
-    "bookmarks",
-    "topSites",
     "favicon",
     "storage"
   ],
   "chrome_url_overrides": {
     "newtab": "index.html"
-  },
-  "action": {
-    "default_popup": "index.html#popup"
   },
   "icons": {
     "48": "small_tiles.png",

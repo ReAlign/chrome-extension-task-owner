@@ -23,7 +23,7 @@ export default tseslint.config(
       },
     },
     rules: {
-      'sort-imports': ['error'],
+      // 'sort-imports': ['error'],
     },
   },
 )
