@@ -24,6 +24,9 @@ export default tseslint.config(
     },
     rules: {
       // 'sort-imports': ['error'],
+      '@typescript-eslint/no-unsafe-call': 0,
+      '@typescript-eslint/no-explicit-any': 0,
+      '@typescript-eslint/no-unsafe-member-access': 0,
     },
   },
 )

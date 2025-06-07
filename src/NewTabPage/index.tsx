@@ -1,11 +1,21 @@
+import { useHotkeys } from 'react-hotkeys-hook'
+
+import { EditorVditor } from '@/components/editor-vditor'
+import { TaskDraggable } from '@/components/task-draggable'
+
 import './index.scss'
 
 export const NewTabPage = () => {
+  useHotkeys('meta+d', (evt) => {
+    evt.preventDefault()
+
+    alert('快捷键触发：meta+d')
+  })
+
   return (
-    <div className="to-new-tab-page">
-      <h1>Welcome to the New Tab Page</h1>
-      <p>This is a placeholder for your new tab page content.</p>
-      {/* You can add more components or features here as needed */}
-    </div>
+    <>
+      <EditorVditor />
+      <TaskDraggable />
+    </>
   )
 }
