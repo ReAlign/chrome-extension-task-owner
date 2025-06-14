@@ -1,0 +1,23 @@
+$buttons-height: 32px;
+
+.bz-edit-buttons {
+  &-container {
+    position: relative;
+    width: auto;
+    height: $buttons-height;
+    padding: 0 18px;
+    color: #666;
+    line-height: $buttons-height;
+    background-color: rgb(36, 41, 47);
+    border-radius: calc($buttons-height / 2);
+    transition: all .3s;
+    z-index: 11;
+
+    &:focus {
+      outline: none;
+      color: #fff;
+      background-color: var(--color-bgc);
+      box-shadow: var(--color-tips-shadow);
+    }
+  }
+}

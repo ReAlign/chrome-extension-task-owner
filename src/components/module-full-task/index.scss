@@ -1,0 +1,37 @@
+$task_editor_width: 500px;
+$task_draggable_width: calc(100vw - #{$task_editor_width});
+$task_draggable_inner_padding: 24px;
+
+.bz-task {
+  &-container {
+    //
+  }
+
+  &-editor {
+    position: absolute;
+    width: $task_editor_width;
+    height: 100%;
+    border-right: 1px solid var(--color-border-color);
+  }
+
+  &-edit-buttons {
+    position: fixed;
+    right: calc(100% - #{$task_editor_width} + 12px);
+    bottom: 12px;
+  }
+
+  &-drop-area {
+    position: fixed;
+    bottom: 0;
+    right: 0;
+    width: $task_draggable_width;
+    height: 400px;
+  }
+
+  &-draggable {
+    position: absolute;
+    right: 0;
+    width: $task_draggable_width;
+    height: 100%;
+  }
+}

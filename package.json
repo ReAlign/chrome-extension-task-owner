@@ -14,12 +14,17 @@
     "storycap": "storycap http://localhost:9009 --serverCmd 'storybook dev -p 9009'"
   },
   "dependencies": {
+    "@excalidraw/excalidraw": "^0.18.0",
+    "events": "^3.3.0",
     "github-markdown-css": "^5.8.1",
     "interactjs": "^1.10.27",
+    "jotai": "^2.12.5",
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.1.0",
     "showdown": "^2.1.0",
+    "toastify-js": "^1.12.0",
+    "use-long-press": "^3.3.0",
     "vditor": "^3.11.1"
   },
   "devDependencies": {
@@ -33,6 +38,8 @@
     "@types/node": "22.15.29",
     "@types/react": "19.1.6",
     "@types/react-dom": "19.1.6",
+    "@types/showdown": "^2.0.6",
+    "@types/toastify-js": "^1.12.4",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^9.0.0",
     "eslint-plugin-react": "^7.34.1",

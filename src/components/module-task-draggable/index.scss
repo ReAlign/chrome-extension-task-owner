@@ -1,0 +1,16 @@
+$task_draggable_inner_padding: 24px;
+
+.bz-task-draggable {
+  &-container {
+    //
+  }
+
+  &-inner {
+    position: absolute;
+    width: calc(100% - #{$task_draggable_inner_padding * 2});
+    height: calc(100% - #{$task_draggable_inner_padding * 2});
+    top: $task_draggable_inner_padding;
+    left: $task_draggable_inner_padding;
+    /* background-color: red; */
+  }
+}

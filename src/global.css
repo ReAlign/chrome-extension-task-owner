@@ -1,113 +1,48 @@
 :root {
-  --new-tab-bgc: rgb(32, 33, 36);
+  /* color */
+  --color-info: #007fff;
+  --color-done: #3cb371;
+  --color-remove: #e32636;
+
+  --color-bgc: rgb(41, 42, 45);
+  --color-bgc-0: rgba(41, 42, 45, 0);
+  --color-bgc-darker: #212121;
+  --color-border-color: rgb(60, 60, 60);
+  --color-card-shadow: color(srgb 0 0 0 / 0.3) 0px 1px 2px 0px, color(srgb 0 0 0 / 0.15) 0px 2px 6px 2px;
+  /*  */
+  --color-tips-shadow: 0px 0px 6px #ddd;
 }
 
 html,
 body,
-#root {
+#root,
+.cls-new-tab-task,
+.cls-new-tab-excalidraw {
   position: absolute;
   width: 100vw;
   height: 100vh;
   margin: 0;
   padding: 0;
-  background-color: var(--new-tab-bgc);
+  background-color: var(--color-bgc);
   overflow: hidden;
-}
-
-/*  */
-
-.cls-new-tab-editor,
-.cls-new-tab-draggable-area-wrap {
-  position: absolute;
-  height: 100vh;
-}
-
-/* For Editor Start ------------------------------------- */
-.cls-new-tab-editor {
   box-sizing: border-box;
-  width: 40vw;
-  /* padding: 16px;
-  font-family: monospace;
-  font-size: 20px;
-  line-height: 32px;
-  color: #aaa;
-  outline: none; */
-  border-right: 1px solid rgb(60, 60, 60);
-}
-.cls-new-tab-editor-inner {
-  position: relative;
-  width: 100%;
-  height: 100%;
-}
-/* .cls-new-tab-editor:focus-visible {
-  background-color: rgb(54, 54, 54);
-} */
-
-/* vditor --------------------------- */
-.vditor-toolbar.vditor-toolbar--hide {
-  height: 0 !important;
-  padding: 0 !important;
-  border: none !important;
-}
-/* For Editor End --------------------------------------- */
-
-.cls-new-tab-draggable-area-wrap {
-  right: 0;
-  box-sizing: border-box;
-  width: 60vw;
-  /* background-color: green; */
 }
 
-.cls-new-tab-draggable-area-inner {
-  position: absolute;
-  width: calc(100% - 32px);
-  height: calc(100% - 32px);
-  top: 16px;
-  left: 16px;
-  /* background-color: red; */
+/* New Tab ----------------------------------------------- */
+.markdown-body {
+  background-color: transparent;
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    margin-top: 0.25em !important;
+  }
 }
 
-.drag-item {
-  position: absolute;
-  width: 240px;
-  height: 160px;
-  background-color: rgb(41, 42, 45);
-  box-shadow:
-    color(srgb 0 0 0 / 0.3) 0px 1px 2px 0px,
-    color(srgb 0 0 0 / 0.15) 0px 2px 6px 2px;
-  color: white;
-  /* border: 1px solid #fff; */
-  border-radius: 8px;
-  padding: 4%;
-  touch-action: none;
-  user-select: none;
-  transform: translate(0px, 0px);
-}
-
-.drag-item-btn {
-  flex-shrink: 0;
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  box-sizing: border-box;
-  min-width: 66px;
-  height: 36px;
-  padding: 8px 16px;
-  outline-width: 0px;
-  overflow: hidden;
-  position: relative;
-  cursor: pointer;
-  user-select: none;
-  -webkit-tap-highlight-color: transparent;
-  border: 1px solid rgb(4, 125, 183);
-  border-radius: 100px;
-  background: rgba(0, 0, 0, 0);
-  color: rgb(168, 199, 250);
-  font-weight: 500;
-  line-height: 20px;
-  /* isolation: isolate; */
-}
-
-.drag-item-btn:hover {
-  background-color: rgba(227, 227, 227, 0.08);
+/* Dialog ----------------------------------------------- */
+dialog::backdrop {
+  /* background-color: rgba(0, 0, 0, 0.5); */
+  backdrop-filter: blur(3px);
 }

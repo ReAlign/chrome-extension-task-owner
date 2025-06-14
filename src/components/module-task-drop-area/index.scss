@@ -1,0 +1,44 @@
+.bz-task-drop-area {
+  &-container {
+    display: none;
+    z-index: 1;
+
+    &::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 1px;
+      height: 100%;
+      background-color: var(--color-border-color);
+    }
+  }
+
+  &-sub-area {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 0;
+    width: 50%;
+    height: 100%;
+    background-color: #000;
+    opacity: .3;
+
+    &.edit {
+      left: 0;
+    }
+
+    &.confirm {
+      right: 0;
+    }
+  }
+
+  &-edit-highlight {
+    background-color: var(--color-info);
+  }
+
+  &-confirm-highlight {
+    background-color: var(--color-done);
+  }
+}

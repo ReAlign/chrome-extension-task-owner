@@ -1,3 +1,21 @@
-.to-new-tab-page {
-  background-color: red;
+.bz-hotkeys-table {
+  width: 360px;
+  border-collapse: collapse;
+  text-align: center;
+  font-size: 16px;
+  line-height: 1.5;
+
+  th,
+  td {
+    // border: 1px solid #ddd;
+    padding: 8px;
+  }
+
+  thead tr {
+    background-color: #e2e2e2;
+  }
+
+  tbody tr:nth-child(even) {
+    background-color: #f2f2f2;
+  }
 }

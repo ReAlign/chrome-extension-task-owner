@@ -3,8 +3,8 @@ import ReactDOM from 'react-dom/client'
 
 import { NewTabPage } from './NewTabPage'
 
-import 'vditor/dist/index.css'
-import 'vditor/dist/css/content-theme/dark.css'
+import 'toastify-js/src/toastify.css'
+import 'github-markdown-css/github-markdown-dark.css'
 
 import './global.css'
 

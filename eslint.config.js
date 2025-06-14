@@ -24,9 +24,21 @@ export default tseslint.config(
     },
     rules: {
       // 'sort-imports': ['error'],
+      '@typescript-eslint/no-unsafe-assignment': 0,
       '@typescript-eslint/no-unsafe-call': 0,
       '@typescript-eslint/no-explicit-any': 0,
       '@typescript-eslint/no-unsafe-member-access': 0,
+      '@typescript-eslint/unbound-method': 0,
+      '@typescript-eslint/no-unused-vars': [
+        'error',
+        {
+          vars: 'all',
+          args: 'after-used',
+          ignoreRestSiblings: true,
+          varsIgnorePattern: '^_',
+          argsIgnorePattern: '^_',
+        },
+      ],
     },
   },
 )
