@@ -8,6 +8,10 @@ export const E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE =
 export const E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE_RESPONSE =
   //
   'e-key-hotkey-meta-s-request-get-value-response'
+// Common, set editor value [reset / edit]
+export const E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE =
+  //
+  'e-key-global-request-set-editor-value'
 // From top to draggable, save value
 export const E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE =
   //

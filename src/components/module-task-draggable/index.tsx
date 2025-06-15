@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
+import { useEffect } from 'react'
 
 import {
   //
-  queryAllTasks,
-  addTask,
-  updateTask,
+  apiQueryAllTasks,
+  apiAddTask,
+  apiUpdateTask,
 } from '@/services'
+import { useJotaiTasks } from '@/jotai'
 import { useTaskDraggable } from '@/hooks/useTaskDraggable'
 import { UnitTaskCard } from '@/components/unit-task-card'
 import {
@@ -13,6 +14,7 @@ import {
   EventBus,
   E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE,
   E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE,
+  E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE,
 } from '@/utils/event-bus'
 import { logger } from '@/utils/logger'
 
@@ -25,19 +27,20 @@ export const ModuleTaskDraggable = ({
   classname: string
 }) => {
   useTaskDraggable()
-
-  const [
+  const {
     //
-    taskList,
-    setTaskList,
-  ] = useState<Type_TaskInfo[]>([])
+    tasks,
+    initTasks,
+    addTask,
+    updateTask,
+  } = useJotaiTasks()
 
   useEffect(() => {
-    queryAllTasks()
+    apiQueryAllTasks()
       .then((res) => {
-        logger('查询到的任务列表:', res)
+        logger('queryAllTasks - 查询到的任务列表:', res)
         if (res.success) {
-          setTaskList(res.data || [])
+          initTasks(res.data || [])
         }
       })
       .catch((_err) => {})
@@ -49,10 +52,14 @@ export const ModuleTaskDraggable = ({
       taskItem: Type_TaskInfo
     }) => {
       logger('接收到新建任务卡片:', taskItem)
-      addTask(taskItem)
+      apiAddTask(taskItem)
         .then((result) => {
           if (result) {
-            setTaskList((prev) => [...prev, taskItem])
+            EventBus.emit(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, {
+              fromScene: 'reset',
+              value: '',
+            })
+            addTask(taskItem)
           }
         })
         .catch((_err) => {})
@@ -64,20 +71,11 @@ export const ModuleTaskDraggable = ({
       updateInfo,
     }: Type_EB_UpdateTaskProps) => {
       logger('接收到更新任务卡片:', { scene, createTimestamp, updateInfo })
-      updateTask({ createTimestamp, updateInfo })
+      apiUpdateTask({ createTimestamp, updateInfo })
         .then((result) => {
           if (result) {
             if (scene === 'status' && (updateInfo as Type_TaskInfo_Status)?.status) {
-              setTaskList((prev) => {
-                return prev.map((taskItem) => {
-                  return {
-                    ...taskItem,
-                    ...(taskItem.createTimestamp === createTimestamp
-                      ? { status: (updateInfo as Type_TaskInfo_Status).status }
-                      : {}),
-                  }
-                })
-              })
+              updateTask(createTimestamp, { updateInfo })
             }
           } else {
             logger('更新任务卡片失败，请稍后重试')
@@ -98,7 +96,7 @@ export const ModuleTaskDraggable = ({
   return (
     <div className={`${classname} bz-task-draggable-container`}>
       <div className="bz-task-draggable-inner">
-        {taskList.map((taskItem) => {
+        {tasks.map((taskItem) => {
           return <UnitTaskCard key={taskItem.createTimestamp} taskInfo={taskItem} />
         })}
       </div>

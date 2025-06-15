@@ -29,6 +29,7 @@ import { generateNewTaskInfo } from './config'
 import './index.scss'
 
 export const NewTabPage = () => {
+  window.__global_tasks__ = []
   const dialogRef = useRef<T_DialogModalHandle>(null)
   const [
     //

@@ -1,5 +1,7 @@
 import { useState } from 'react'
 
+import { useJotaiEditorMode } from '@/jotai'
+
 import './index.scss'
 
 export const ModuleEditButtons = ({
@@ -8,6 +10,7 @@ export const ModuleEditButtons = ({
 }: {
   classname: string
 }) => {
+  const { editorMode } = useJotaiEditorMode()
   // '✔︎' | '✘'
   const [saveState, setSaveState] = useState<
     { stat: 'wait-save'; label: '⌛️' } | { stat: 'can-not-save'; label: '🚫' }
@@ -24,7 +27,7 @@ export const ModuleEditButtons = ({
         setSaveState({ stat: 'can-not-save', label: '🚫' })
       }}
     >
-      {saveState.label}
+      {editorMode.mode} {saveState.label}
     </div>
   )
 }

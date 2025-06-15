@@ -15,7 +15,7 @@ export const getLocalData = ({
   // 读取数据
   return new Promise((resolve, _reject) => {
     chrome.storage.local.get(localKey, function (result) {
-      logger('读取到的数据 ->', result[localKey])
+      // logger('读取到的数据 ->', result[localKey])
       const data = safeParse(`${result[localKey]}`)
       if (result[localKey] !== undefined && data === null) {
         logger('error: 数据解析失败或不存在')

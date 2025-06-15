@@ -1,8 +1,16 @@
-import { atom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 import showdown from 'showdown'
 
-export const jotaiShowdown = atom(
+const jotaiShowdown = atom(
   new showdown.Converter({
     tasklists: true,
   }),
 )
+
+export const useJotaiShowdown = () => {
+  const [showdownIns] = useAtom(jotaiShowdown)
+
+  return {
+    showdownIns,
+  }
+}

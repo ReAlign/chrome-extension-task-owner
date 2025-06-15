@@ -1,3 +1,12 @@
-import { atom } from 'jotai'
+import { atom, useAtom } from 'jotai'
 
-export const jotaiDragMoving = atom(false)
+const jotaiDragMoving = atom(false)
+
+export const useJotaiDraggable = () => {
+  const [dragMoving, setDragMoving] = useAtom(jotaiDragMoving)
+
+  return {
+    dragMoving,
+    setDragMoving,
+  }
+}

@@ -6,7 +6,7 @@ $buttons-height: 32px;
     width: auto;
     height: $buttons-height;
     padding: 0 18px;
-    color: #666;
+    color: #fff;
     line-height: $buttons-height;
     background-color: rgb(36, 41, 47);
     border-radius: calc($buttons-height / 2);
@@ -15,7 +15,6 @@ $buttons-height: 32px;
 
     &:focus {
       outline: none;
-      color: #fff;
       background-color: var(--color-bgc);
       box-shadow: var(--color-tips-shadow);
     }

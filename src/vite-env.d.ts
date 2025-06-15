@@ -1,5 +1,9 @@
 /// <reference types="vite/client" />
 
+declare interface Window {
+  __global_tasks__: Type_TaskInfo[] // 全局任务列表
+}
+
 type Type_TaskInfo_Unique = {
   createTimestamp: number // 用于唯一标识任务卡片
 }
@@ -20,10 +24,10 @@ type Type_TaskInfo = Type_TaskInfo_Unique &
   Type_TaskInfo_Status & {
     contentRotate: number // 任务卡片内容的旋转角度，单位为度
   }
-
-type Type_UpdateTaskProps = Type_TaskInfo_Unique & {
+type Type_TaskUpdatePart = {
   updateInfo: Type_TaskInfo_Content | Type_TaskInfo_Position | Type_TaskInfo_Status
 }
+type Type_UpdateTaskProps = Type_TaskInfo_Unique & Type_TaskUpdatePart
 
 type Type_EB_UpdateTaskProps = Type_UpdateTaskProps & {
   scene: 'position' | 'content' | 'status'
@@ -32,5 +36,5 @@ type Type_EB_UpdateTaskProps = Type_UpdateTaskProps & {
 /**
  * dataset define
  */
-type Type_Dataset_DropZone = 'edit' | 'confirm'
+type Type_Dataset_DropZone = 'common' | 'edit' | 'confirm'
 type Type_Dataset_DragCardTempState = 'confirmed'

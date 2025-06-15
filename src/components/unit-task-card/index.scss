@@ -1,5 +1,15 @@
 $task_card_size: 340px;
 
+@keyframes ani_task_card_active_breath {
+  from {
+    box-shadow: var(--color-card-shadow);
+  }
+
+  to {
+    box-shadow: var(--color-tips-shadow);
+  }
+}
+
 .bz-unit-task-card {
   &-item {
     position: absolute;
@@ -9,6 +19,12 @@ $task_card_size: 340px;
     user-select: none;
     transform: translate(0px, 0px);
     z-index: 2;
+
+    &.cls-card-active {
+      &>div.bz-unit-task-card-item-inner {
+        animation: ani_task_card_active_breath 1s infinite alternate;
+      }
+    }
   }
 
   &-item-inner {

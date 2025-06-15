@@ -1,6 +1,5 @@
 import { CSSProperties } from 'react'
 import { useLongPress } from 'use-long-press'
-import { useAtom } from 'jotai'
 
 import {
   //
@@ -9,8 +8,7 @@ import {
   CLS_SHOWDOWN_BODY,
   DatasetKeyDragCardUniqueId,
 } from '@/constants'
-import { jotaiDragMoving } from '@/jotai/draggable'
-import { jotaiShowdown } from '@/jotai/showdown'
+import { useJotaiDraggable, useJotaiShowdown } from '@/jotai'
 
 import './index.scss'
 
@@ -20,8 +18,8 @@ export const UnitTaskCard = ({
 }: {
   taskInfo: Type_TaskInfo
 }) => {
-  const [dragMoving] = useAtom(jotaiDragMoving)
-  const [showdownIns] = useAtom(jotaiShowdown)
+  const { dragMoving } = useJotaiDraggable()
+  const { showdownIns } = useJotaiShowdown()
 
   const getPositionStyles = (): CSSProperties => {
     const positionLeft = taskInfo.positionX === -1 ? 0 : taskInfo.positionX

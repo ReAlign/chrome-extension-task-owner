@@ -8,6 +8,7 @@ import {
   EventBus,
   E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE,
   E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE_RESPONSE,
+  E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE,
 } from '@/utils/event-bus'
 
 import 'vditor/dist/index.css'
@@ -61,9 +62,28 @@ export const ModuleEditorVditor = ({
         alert('编辑器未初始化，请稍后再试！')
       }
     }
+    const setEditorValueHandler = ({
+      //
+      value,
+      fromScene,
+    }: {
+      value: string
+      fromScene: 'edit' | 'reset'
+    }) => {
+      if (editorInstance.current) {
+        editorInstance.current.setValue(value || '')
+        if (fromScene === 'edit') {
+          editorInstance.current.focus()
+        }
+      } else {
+        alert('编辑器未初始化，请稍后再试！')
+      }
+    }
     EventBus.on(E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE, metaSRequestVditorValueHandler)
+    EventBus.on(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, setEditorValueHandler)
     return () => {
       EventBus.off(E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE, metaSRequestVditorValueHandler)
+      EventBus.off(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, setEditorValueHandler)
     }
   }, [])
 

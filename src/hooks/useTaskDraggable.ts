@@ -1,12 +1,13 @@
 import { useEffect, MouseEvent } from 'react'
 import interact from 'interactjs'
-import { useAtom } from 'jotai'
 
 import {
   //
   CLS_DROP_ZONE,
   CLS_DROPPABLE_HANDLE,
   CLS_DRAGGABLE_HANDLE,
+  ID_EDIT_CURRENT_TASK,
+  CLS_STYLE_ACTIVE,
   DatasetKeyDropZoneType,
   DatasetKeyDropZoneHighlightClass,
   DatasetKeyDragCardUniqueId,
@@ -17,11 +18,17 @@ import {
   //
   EventBus,
   E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE,
+  E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE,
 } from '@/utils/event-bus'
 import { logger } from '@/utils/logger'
-import { showToast } from '@/utils/toast'
+// import { showToast } from '@/utils/toast'
 
-import { jotaiDragMoving } from '@/jotai/draggable'
+import {
+  //
+  useJotaiDraggable,
+  useJotaiEditorMode,
+  useJotaiTasks,
+} from '@/jotai'
 
 const updateDragMovingState = ({
   //
@@ -33,7 +40,7 @@ const updateDragMovingState = ({
   fromX: string
   dragMovingHandler: any
 }) => {
-  logger('updateDragMovingState', isMoving, fromX)
+  logger('updateDragMovingState - 移动状态更新', isMoving, fromX)
   dragMovingHandler(isMoving)
 }
 
@@ -104,7 +111,9 @@ const listeners = {
 }
 
 export const useTaskDraggable = () => {
-  const [_, setDragMoving] = useAtom(jotaiDragMoving)
+  const { setDragMoving } = useJotaiDraggable()
+  const { setEditorMode } = useJotaiEditorMode()
+  const { getTaskByUniqueId } = useJotaiTasks()
 
   useEffect(() => {
     interact(`.${CLS_DROP_ZONE}`).dropzone({
@@ -124,14 +133,18 @@ export const useTaskDraggable = () => {
         const dropZoneEle = event.target
 
         const cls = dropZoneEle.getAttribute(DatasetKeyDropZoneHighlightClass)
-        dropZoneEle.classList.add(cls)
+        if (cls) {
+          dropZoneEle.classList.add(cls)
+        }
       },
       // 拖拽离开
       ondragleave: function (event) {
-        const dropzoneEle = event.target
+        const dropZoneEle = event.target
 
-        const cls = dropzoneEle.getAttribute(DatasetKeyDropZoneHighlightClass)
-        dropzoneEle.classList.remove(cls)
+        const cls = dropZoneEle.getAttribute(DatasetKeyDropZoneHighlightClass)
+        if (cls) {
+          dropZoneEle.classList.remove(cls)
+        }
       },
       // 拖拽放下
       ondrop: function (event) {
@@ -140,20 +153,39 @@ export const useTaskDraggable = () => {
 
         const action: Type_Dataset_DropZone = dropzoneEle.getAttribute(DatasetKeyDropZoneType)
         const targetTaskUniqueId = draggableEle.getAttribute(DatasetKeyDragCardUniqueId)
-        // alert(`Dropped - ${action} - ${targetTaskUniqueId}`)
-        if (action === 'confirm') {
+        const uniqueId = Number(targetTaskUniqueId)
+
+        logger('拖拽放下:', {
+          //
+          action,
+          targetTaskUniqueId,
+        })
+
+        if (action === 'common') {
+          setEditorMode({ mode: 'add', uniqueId: null })
+          draggableEle.removeAttribute('id')
+          draggableEle.classList.remove(CLS_STYLE_ACTIVE)
+        } else if (action === 'confirm') {
           const newCardStatus: Type_Dataset_DragCardTempState = 'confirmed'
           draggableEle.setAttribute(DatasetKeyDragCardStatus, newCardStatus)
           const updateProps: Type_EB_UpdateTaskProps = {
             scene: 'status',
-            createTimestamp: Number(targetTaskUniqueId),
+            createTimestamp: uniqueId,
             updateInfo: {
               status: 'confirmed',
             },
           }
           EventBus.emit(E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE, updateProps)
         } else if (action === 'edit') {
-          showToast({ text: '编辑暂不支持' })
+          setEditorMode({ mode: 'edit', uniqueId })
+          const content = getTaskByUniqueId(uniqueId)?.content || ''
+          draggableEle.setAttribute('id', ID_EDIT_CURRENT_TASK)
+          draggableEle.classList.add(CLS_STYLE_ACTIVE)
+          EventBus.emit(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, {
+            fromScene: 'edit',
+            value: content,
+          })
+          // showToast({ text: '编辑暂不支持' })
         }
       },
       // // 拖拽结束

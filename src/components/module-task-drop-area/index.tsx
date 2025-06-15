@@ -1,11 +1,10 @@
-import { useAtom } from 'jotai'
-
 import { CLS_DROP_ZONE } from '@/constants'
 import { IconEdit, IconConfirm } from '@/components/icon'
-import { jotaiDragMoving } from '@/jotai/draggable'
+import { useJotaiDraggable } from '@/jotai'
 
 import {
   //
+  DropZoneCommonAttachAttrs,
   DropZoneEditAttachAttrs,
   DropZoneConfirmAttachAttrs,
   IconProps,
@@ -19,7 +18,7 @@ export const ModuleTaskDropArea = ({
 }: {
   classname: string
 }) => {
-  const [dragMoving] = useAtom(jotaiDragMoving)
+  const { dragMoving } = useJotaiDraggable()
 
   return (
     <div
@@ -32,6 +31,11 @@ export const ModuleTaskDropArea = ({
           : {}
       }
     >
+      <div
+        //
+        {...DropZoneCommonAttachAttrs}
+        className={`${CLS_DROP_ZONE} bz-task-drop-area-top-area`}
+      />
       <div
         //
         {...DropZoneEditAttachAttrs}

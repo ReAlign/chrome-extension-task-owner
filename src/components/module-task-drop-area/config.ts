@@ -4,6 +4,9 @@ import {
   DatasetKeyDropZoneHighlightClass,
 } from '@/constants'
 
+export const DropZoneCommonAttachAttrs = {
+  [DatasetKeyDropZoneType]: 'common',
+}
 export const DropZoneEditAttachAttrs = {
   [DatasetKeyDropZoneType]: 'edit',
   [DatasetKeyDropZoneHighlightClass]: 'bz-task-drop-area-edit-highlight',
