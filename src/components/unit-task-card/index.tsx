@@ -6,7 +6,9 @@ import {
   CLS_DRAGGABLE_HANDLE,
   CLS_DROPPABLE_HANDLE,
   CLS_SHOWDOWN_BODY,
+  //
   DatasetKeyDragCardUniqueId,
+  DatasetKeyDragCardStatus,
 } from '@/constants'
 import { useJotaiDraggable, useJotaiShowdown } from '@/jotai'
 
@@ -43,7 +45,11 @@ export const UnitTaskCard = ({
       {taskInfo.status === 'confirmed' ? null : (
         <div
           //
-          {...{ [DatasetKeyDragCardUniqueId]: taskInfo.createTimestamp }}
+          {...{
+            //
+            [DatasetKeyDragCardUniqueId]: taskInfo.createTimestamp,
+            [DatasetKeyDragCardStatus]: 'common',
+          }}
           className={`${CLS_DRAGGABLE_HANDLE} ${CLS_DROPPABLE_HANDLE} bz-unit-task-card-item`}
           style={getPositionStyles()}
           {...handlers()}
@@ -58,6 +64,11 @@ export const UnitTaskCard = ({
             <div className="bz-unit-task-card-item-body">
               <div
                 className={CLS_SHOWDOWN_BODY}
+                // onClick={(e) => {
+                //   e.stopPropagation()
+
+                //   console.log('xxx: ', e.target)
+                // }}
                 dangerouslySetInnerHTML={{
                   __html: showdownIns.makeHtml(taskInfo.content),
                 }}

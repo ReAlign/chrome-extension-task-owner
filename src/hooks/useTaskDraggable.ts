@@ -6,12 +6,12 @@ import {
   CLS_DROP_ZONE,
   CLS_DROPPABLE_HANDLE,
   CLS_DRAGGABLE_HANDLE,
-  ID_EDIT_CURRENT_TASK,
-  CLS_STYLE_ACTIVE,
   DatasetKeyDropZoneType,
   DatasetKeyDropZoneHighlightClass,
   DatasetKeyDragCardUniqueId,
   DatasetKeyDragCardStatus,
+  DropEndStateForCardNewStateMap,
+  CLS_STYLE_EDIT_DONE,
 } from '@/constants'
 import { EditorVditorWidth } from '@/components/module-full-task'
 import {
@@ -33,81 +33,15 @@ import {
 const updateDragMovingState = ({
   //
   isMoving,
-  fromX,
+  updateFromScene,
   dragMovingHandler,
 }: {
   isMoving: boolean
-  fromX: string
+  updateFromScene: 'start' | 'move' | 'end'
   dragMovingHandler: any
 }) => {
-  logger('updateDragMovingState - 移动状态更新', isMoving, fromX)
+  logger('updateDragMovingState - 移动状态更新', isMoving, updateFromScene)
   dragMovingHandler(isMoving)
-}
-
-const listeners = {
-  dragMoveListener: function ({
-    //
-    evt,
-    dragMovingHandler,
-  }: {
-    evt: MouseEvent<HTMLLIElement>
-    dragMovingHandler: any
-  }) {
-    updateDragMovingState({ isMoving: true, fromX: 'move', dragMovingHandler })
-    const target = evt.target as HTMLElement
-    if (target) {
-      const x = Number((parseFloat(`${target.getAttribute('data-x')}`) || 0) + (evt as any).dx)
-      const y = Number((parseFloat(`${target.getAttribute('data-y')}`) || 0) + (evt as any).dy)
-
-      target.style.transform = `translate(${x}px, ${y}px)`
-      target.setAttribute('data-x', `${x}`)
-      target.setAttribute('data-y', `${y}`)
-    }
-  },
-  dragEndListener: function ({
-    //
-    evt,
-    dragMovingHandler,
-  }: {
-    evt: MouseEvent<HTMLLIElement>
-    dragMovingHandler: any
-  }) {
-    updateDragMovingState({
-      isMoving: false,
-      fromX: 'end',
-      dragMovingHandler,
-    })
-    dragMovingHandler(false)
-    const target = evt.target as HTMLElement
-    if (target) {
-      const uniqueId = target.getAttribute(DatasetKeyDragCardUniqueId)
-      const state = target.getAttribute(DatasetKeyDragCardStatus)
-      const { top, left } = (evt as any).rect
-      const dragAreaPadding = 24
-
-      const x = Math.floor(left - EditorVditorWidth - dragAreaPadding)
-      const y = Math.floor(top - dragAreaPadding)
-
-      console.log('拖拽结束:', {
-        //
-        uniqueId,
-        state,
-        x,
-        y,
-      })
-      if (state !== 'confirmed' && uniqueId) {
-        const updateProps: Type_EB_UpdateTaskProps = {
-          scene: 'position',
-          createTimestamp: Number(uniqueId),
-          updateInfo: {
-            positionX: x,
-            positionY: y,
-          },
-        }
-        EventBus.emit(E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE, updateProps)
-      }
-    }
-  },
 }
 
 export const useTaskDraggable = () => {
@@ -116,6 +50,98 @@ export const useTaskDraggable = () => {
   const { getTaskByUniqueId } = useJotaiTasks()
 
   useEffect(() => {
+    // 监听拖动
+    interact(`.${CLS_DRAGGABLE_HANDLE}`).draggable({
+      inertia: true,
+      modifiers: [
+        interact.modifiers.restrictRect({
+          restriction: 'parent',
+          endOnly: true,
+        }),
+      ],
+      autoScroll: true,
+
+      listeners: {
+        start: (evt: MouseEvent<HTMLLIElement>) => {
+          console.log('拖拽开始:', evt)
+          updateDragMovingState({
+            //
+            isMoving: true,
+            updateFromScene: 'start',
+            dragMovingHandler: setDragMoving,
+          })
+          const draggableEle = evt.target as HTMLElement
+          if (draggableEle) {
+            const uniqueId = Number(draggableEle.getAttribute(DatasetKeyDragCardUniqueId))
+            const stateBeforeDrag = draggableEle.getAttribute(
+              DatasetKeyDragCardStatus,
+            ) as Type_Dataset_DragCardTempState
+
+            console.log('拖拽开始 - 任务唯一ID:', uniqueId, stateBeforeDrag)
+
+            window.__current_active_task_original_state__ = {
+              uniqueId,
+              stateBeforeDrag,
+              stateNow: stateBeforeDrag,
+            }
+          }
+        },
+        move: (evt: MouseEvent<HTMLLIElement>) => {
+          updateDragMovingState({
+            //
+            isMoving: true,
+            updateFromScene: 'move',
+            dragMovingHandler: setDragMoving,
+          })
+          const draggableEle = evt.target as HTMLElement
+          if (draggableEle) {
+            const x = Number((parseFloat(`${draggableEle.getAttribute('data-x')}`) || 0) + (evt as any).dx)
+            const y = Number((parseFloat(`${draggableEle.getAttribute('data-y')}`) || 0) + (evt as any).dy)
+
+            draggableEle.style.transform = `translate(${x}px, ${y}px)`
+            draggableEle.setAttribute('data-x', `${x}`)
+            draggableEle.setAttribute('data-y', `${y}`)
+          }
+        },
+        end: (evt: MouseEvent<HTMLLIElement>) => {
+          updateDragMovingState({
+            isMoving: false,
+            updateFromScene: 'end',
+            dragMovingHandler: setDragMoving,
+          })
+          const draggableEle = evt.target as HTMLElement
+          if (draggableEle) {
+            const uniqueId = draggableEle.getAttribute(DatasetKeyDragCardUniqueId)
+            const state = draggableEle.getAttribute(DatasetKeyDragCardStatus) as Type_Dataset_DragCardTempState
+            const { top, left } = (evt as any).rect
+            const dragAreaPadding = 24
+
+            const x = Math.floor(left - EditorVditorWidth - dragAreaPadding)
+            const y = Math.floor(top - dragAreaPadding)
+
+            console.log('拖拽结束:', {
+              //
+              uniqueId,
+              state,
+              x,
+              y,
+            })
+            if (state !== 'confirmed' && uniqueId) {
+              const updateProps: Type_EB_UpdateTaskProps = {
+                scene: 'position',
+                createTimestamp: Number(uniqueId),
+                updateInfo: {
+                  positionX: x,
+                  positionY: y,
+                },
+              }
+              EventBus.emit(E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE, updateProps)
+            }
+          }
+        },
+      },
+    })
+    // 监听放置
     interact(`.${CLS_DROP_ZONE}`).dropzone({
       // only accept elements matching this CSS selector
       accept: `.${CLS_DROPPABLE_HANDLE}`,
@@ -125,8 +151,16 @@ export const useTaskDraggable = () => {
       // listen for drop related events:
 
       // // 拖拽开始
-      // ondropactivate: function (_event) {
+      // ondropactivate: function (event) {
       //   // add active dropzone feedback
+      //   const dropzoneEle = event.target
+      //   const draggableEle = event.relatedTarget
+
+      //   console.log('拖拽开始: ', {
+      //     //
+      //     dropzoneEle,
+      //     draggableEle,
+      //   })
       // },
       // 拖拽进入
       ondragenter: function (event) {
@@ -148,26 +182,36 @@ export const useTaskDraggable = () => {
       },
       // 拖拽放下
       ondrop: function (event) {
-        const dropzoneEle = event.target
-        const draggableEle = event.relatedTarget
+        const dropzoneEle = event.target as HTMLElement
+        const draggableEle = event.relatedTarget as HTMLElement
 
-        const action: Type_Dataset_DropZone = dropzoneEle.getAttribute(DatasetKeyDropZoneType)
-        const targetTaskUniqueId = draggableEle.getAttribute(DatasetKeyDragCardUniqueId)
-        const uniqueId = Number(targetTaskUniqueId)
+        const action = dropzoneEle.getAttribute(DatasetKeyDropZoneType) as Type_Dataset_DropZone
+        const uniqueId = Number(draggableEle.getAttribute(DatasetKeyDragCardUniqueId))
 
-        logger('拖拽放下:', {
+        const {
           //
-          action,
-          targetTaskUniqueId,
-        })
+          cardTempState,
+          getEditorMode,
+          handleDomAttrs,
+          handleWindowCurrentActiveTaskState,
+        } = DropEndStateForCardNewStateMap[action]
 
+        // Common handle
+        draggableEle.setAttribute(DatasetKeyDragCardStatus, cardTempState)
+        setEditorMode(getEditorMode(action === 'edit' ? uniqueId : null))
+        handleDomAttrs(draggableEle)
+        handleWindowCurrentActiveTaskState()
+
+        // Conditional handle
         if (action === 'common') {
-          setEditorMode({ mode: 'add', uniqueId: null })
-          draggableEle.removeAttribute('id')
-          draggableEle.classList.remove(CLS_STYLE_ACTIVE)
+          if (window.__current_active_task_original_state__?.stateBeforeDrag === 'editing') {
+            draggableEle.classList.remove(CLS_STYLE_EDIT_DONE)
+            EventBus.emit(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, {
+              fromScene: 'edit-cancel',
+              value: '',
+            })
+          }
         } else if (action === 'confirm') {
-          const newCardStatus: Type_Dataset_DragCardTempState = 'confirmed'
-          draggableEle.setAttribute(DatasetKeyDragCardStatus, newCardStatus)
           const updateProps: Type_EB_UpdateTaskProps = {
             scene: 'status',
             createTimestamp: uniqueId,
@@ -177,15 +221,11 @@ export const useTaskDraggable = () => {
           }
           EventBus.emit(E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE, updateProps)
         } else if (action === 'edit') {
-          setEditorMode({ mode: 'edit', uniqueId })
           const content = getTaskByUniqueId(uniqueId)?.content || ''
-          draggableEle.setAttribute('id', ID_EDIT_CURRENT_TASK)
-          draggableEle.classList.add(CLS_STYLE_ACTIVE)
           EventBus.emit(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, {
             fromScene: 'edit',
             value: content,
           })
-          // showToast({ text: '编辑暂不支持' })
         }
       },
       // // 拖拽结束
@@ -194,26 +234,6 @@ export const useTaskDraggable = () => {
       //   // event.target.classList.remove('drop-active')
       //   // event.target.classList.remove('drop-target')
       // },
-    })
-
-    interact(`.${CLS_DRAGGABLE_HANDLE}`).draggable({
-      inertia: true,
-      modifiers: [
-        interact.modifiers.restrictRect({
-          restriction: 'parent',
-          endOnly: true,
-        }),
-      ],
-      autoScroll: true,
-
-      listeners: {
-        move: (evt: MouseEvent<HTMLLIElement>) => {
-          listeners.dragMoveListener({ evt, dragMovingHandler: setDragMoving })
-        },
-        end: (evt: MouseEvent<HTMLLIElement>) => {
-          listeners.dragEndListener({ evt, dragMovingHandler: setDragMoving })
-        },
-      },
     })
   }, [])
 }

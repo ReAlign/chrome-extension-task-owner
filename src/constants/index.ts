@@ -6,6 +6,7 @@ export const CLS_DROPPABLE_HANDLE = 'droppable'
 export const CLS_SHOWDOWN_BODY = 'markdown-body'
 export const ID_EDIT_CURRENT_TASK = 'j-edit-current-task'
 export const CLS_STYLE_ACTIVE = 'cls-card-active'
+export const CLS_STYLE_EDIT_DONE = 'cls-card-edit-done'
 
 export const DatasetKeyDropZoneType = 'data-drop-zone-type'
 export const DatasetKeyDropZoneHighlightClass = 'data-highlight-class'

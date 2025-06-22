@@ -68,7 +68,7 @@ export const ModuleEditorVditor = ({
       fromScene,
     }: {
       value: string
-      fromScene: 'edit' | 'reset'
+      fromScene: 'edit' | 'edit-cancel' | 'reset-after-add' | 'reset-after-edit'
     }) => {
       if (editorInstance.current) {
         editorInstance.current.setValue(value || '')

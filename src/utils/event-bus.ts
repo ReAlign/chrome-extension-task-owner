@@ -13,9 +13,13 @@ export const E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE =
   //
   'e-key-global-request-set-editor-value'
 // From top to draggable, save value
-export const E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE =
+export const E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_NEW_VALUE =
   //
-  'e-key-from-top-to-draggable-save-value'
+  'e-key-from-top-to-draggable-save-new-value'
+export const E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_OLD_VALUE =
+  //
+  'e-key-from-top-to-draggable-save-old-value'
+
 // From drag-hook to draggable, update value
 export const E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE =
   //

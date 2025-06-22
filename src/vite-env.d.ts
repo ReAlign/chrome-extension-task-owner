@@ -2,6 +2,11 @@
 
 declare interface Window {
   __global_tasks__: Type_TaskInfo[] // 全局任务列表
+  __current_active_task_original_state__: null | {
+    uniqueId: number
+    stateBeforeDrag: Type_Dataset_DragCardTempState
+    stateNow: Type_Dataset_DragCardTempState
+  }
 }
 
 type Type_TaskInfo_Unique = {
@@ -37,4 +42,10 @@ type Type_EB_UpdateTaskProps = Type_UpdateTaskProps & {
  * dataset define
  */
 type Type_Dataset_DropZone = 'common' | 'edit' | 'confirm'
-type Type_Dataset_DragCardTempState = 'confirmed'
+type Type_Dataset_DragCardTempState = 'common' | 'editing' | 'confirmed'
+
+type Type_EditorMode = {
+  //
+  mode: 'add' | 'edit'
+  uniqueId: null | number
+}

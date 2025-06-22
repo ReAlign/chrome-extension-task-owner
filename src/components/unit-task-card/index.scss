@@ -6,7 +6,7 @@ $task_card_size: 340px;
   }
 
   to {
-    box-shadow: var(--color-tips-shadow);
+    box-shadow: var(--color-edit-ing-shadow);
   }
 }
 
@@ -22,7 +22,13 @@ $task_card_size: 340px;
 
     &.cls-card-active {
       &>div.bz-unit-task-card-item-inner {
-        animation: ani_task_card_active_breath 1s infinite alternate;
+        animation: ani_task_card_active_breath .7s infinite alternate;
+      }
+    }
+
+    &.cls-card-edit-done {
+      &>div.bz-unit-task-card-item-inner {
+        box-shadow: var(--color-edit-done-shadow);
       }
     }
   }

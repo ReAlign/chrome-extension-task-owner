@@ -21,7 +21,8 @@ import {
   EventBus,
   E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE,
   E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE_RESPONSE,
-  E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE,
+  E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_NEW_VALUE,
+  E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_OLD_VALUE,
 } from '@/utils/event-bus'
 
 import { generateNewTaskInfo } from './config'
@@ -30,6 +31,8 @@ import './index.scss'
 
 export const NewTabPage = () => {
   window.__global_tasks__ = []
+  window.__current_active_task_original_state__ = null
+
   const dialogRef = useRef<T_DialogModalHandle>(null)
   const [
     //
@@ -77,11 +80,36 @@ export const NewTabPage = () => {
     }: {
       value: string
     }) => {
-      console.log('Meta S - 当前内容:', { value, len: value.length })
+      console.log('Meta S - 当前内容:', {
+        //
+        value,
+        len: value.length,
+        xxx: window.__current_active_task_original_state__?.stateNow,
+      })
       if (value.length) {
-        EventBus.emit(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE, {
-          taskItem: generateNewTaskInfo({ value }),
-        })
+        const {
+          //
+          uniqueId,
+          stateNow,
+        } = window.__current_active_task_original_state__ || {}
+
+        if (stateNow === 'editing' && uniqueId) {
+          // 编辑
+          const updateProps: Type_EB_UpdateTaskProps = {
+            scene: 'content',
+            createTimestamp: uniqueId,
+            updateInfo: {
+              latestUpdateTimestamp: Date.now(),
+              content: value,
+            },
+          }
+          EventBus.emit(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_OLD_VALUE, updateProps)
+        } else {
+          // 新建
+          EventBus.emit(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_NEW_VALUE, {
+            taskItem: generateNewTaskInfo({ value }),
+          })
+        }
       }
     }
 

@@ -2,6 +2,12 @@ import { useEffect } from 'react'
 
 import {
   //
+  ID_EDIT_CURRENT_TASK,
+  CLS_STYLE_ACTIVE,
+  CLS_STYLE_EDIT_DONE,
+} from '@/constants'
+import {
+  //
   apiQueryAllTasks,
   apiAddTask,
   apiUpdateTask,
@@ -12,7 +18,8 @@ import { UnitTaskCard } from '@/components/unit-task-card'
 import {
   //
   EventBus,
-  E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE,
+  E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_NEW_VALUE,
+  E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_OLD_VALUE,
   E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE,
   E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE,
 } from '@/utils/event-bus'
@@ -56,7 +63,7 @@ export const ModuleTaskDraggable = ({
         .then((result) => {
           if (result) {
             EventBus.emit(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, {
-              fromScene: 'reset',
+              fromScene: 'reset-after-add',
               value: '',
             })
             addTask(taskItem)
@@ -74,8 +81,22 @@ export const ModuleTaskDraggable = ({
       apiUpdateTask({ createTimestamp, updateInfo })
         .then((result) => {
           if (result) {
+            // 更新状态
             if (scene === 'status' && (updateInfo as Type_TaskInfo_Status)?.status) {
               updateTask(createTimestamp, { updateInfo })
+            }
+            // 更新内容
+            if (scene === 'content' && (updateInfo as Type_TaskInfo_Content)?.latestUpdateTimestamp) {
+              updateTask(createTimestamp, { updateInfo })
+              EventBus.emit(E_KEY_GLOBAL_REQUEST_SET_EDITOR_VALUE, {
+                fromScene: 'reset-after-edit',
+                value: '',
+              })
+              const dom = document.getElementById(ID_EDIT_CURRENT_TASK)
+              if (dom) {
+                dom.classList.remove(CLS_STYLE_ACTIVE)
+                dom.classList.add(CLS_STYLE_EDIT_DONE)
+              }
             }
           } else {
             logger('更新任务卡片失败，请稍后重试')
@@ -84,11 +105,13 @@ export const ModuleTaskDraggable = ({
         .catch((_err) => {})
     }
 
-    EventBus.on(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE, handleSaveValue)
+    EventBus.on(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_NEW_VALUE, handleSaveValue)
+    EventBus.on(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_OLD_VALUE, handleUpdateValue)
     EventBus.on(E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE, handleUpdateValue)
 
     return () => {
-      EventBus.off(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_VALUE, handleSaveValue)
+      EventBus.off(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_NEW_VALUE, handleSaveValue)
+      EventBus.off(E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_OLD_VALUE, handleUpdateValue)
       EventBus.off(E_KEY_FROM_DRAG_HOOK_TO_DRAGGABLE_UPDATE_VALUE, handleUpdateValue)
     }
   }, [])
