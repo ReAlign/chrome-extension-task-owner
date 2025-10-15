@@ -115,7 +115,7 @@ export const NewTabPage = () => {
 
   return (
     <>
-      {pageModeState === PageModeMap.NotInited && <ModuleFullTip />}
+      {(pageModeState === PageModeMap.NotInited || pageModeState === PageModeMap.HideMode) && <ModuleFullTip />}
       {pageModeState === PageModeMap.TaskMode && <ModuleFullTask />}
       {pageModeState === PageModeMap.DrawMode && <ModuleFullDraw />}
       <DialogHotkeys />
