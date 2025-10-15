@@ -3,7 +3,8 @@ import showdown from 'showdown'
 
 const jotaiShowdown = atom(
   new showdown.Converter({
-    tasklists: true,
+    tasklists: true, // checkbox
+    disableForced4SpacesIndentedSublists: true, // nested lists
   }),
 )
 

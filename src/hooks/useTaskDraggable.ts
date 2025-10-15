@@ -63,7 +63,7 @@ export const useTaskDraggable = () => {
 
       listeners: {
         start: (evt: MouseEvent<HTMLLIElement>) => {
-          console.log('拖拽开始:', evt)
+          logger('拖拽开始:', evt)
           updateDragMovingState({
             //
             isMoving: true,
@@ -77,7 +77,7 @@ export const useTaskDraggable = () => {
               DatasetKeyDragCardStatus,
             ) as Type_Dataset_DragCardTempState
 
-            console.log('拖拽开始 - 任务唯一ID:', uniqueId, stateBeforeDrag)
+            logger('拖拽开始 - 任务唯一ID:', uniqueId, stateBeforeDrag)
 
             window.__current_active_task_original_state__ = {
               uniqueId,
@@ -119,7 +119,7 @@ export const useTaskDraggable = () => {
             const x = Math.floor(left - EditorVditorWidth - dragAreaPadding)
             const y = Math.floor(top - dragAreaPadding)
 
-            console.log('拖拽结束:', {
+            logger('拖拽结束:', {
               //
               uniqueId,
               state,
@@ -156,7 +156,7 @@ export const useTaskDraggable = () => {
       //   const dropzoneEle = event.target
       //   const draggableEle = event.relatedTarget
 
-      //   console.log('拖拽开始: ', {
+      //   logger('拖拽开始: ', {
       //     //
       //     dropzoneEle,
       //     draggableEle,

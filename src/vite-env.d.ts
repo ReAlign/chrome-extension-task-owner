@@ -1,6 +1,14 @@
 /// <reference types="vite/client" />
 
+declare module 'shine.js'
+
+interface FileSystemDirectoryHandle {
+  queryPermission?: (descriptor?: { mode?: 'read' | 'readwrite' }) => Promise<PermissionState>
+  requestPermission?: (descriptor?: { mode?: 'read' | 'readwrite' }) => Promise<PermissionState>
+}
+
 declare interface Window {
+  showDirectoryPicker?: () => Promise<FileSystemDirectoryHandle>
   __global_tasks__: Type_TaskInfo[] // 全局任务列表
   __current_active_task_original_state__: null | {
     uniqueId: number

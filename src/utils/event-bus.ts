@@ -1,5 +1,14 @@
 import Events from 'events'
 
+// Common, open dialog hotkeys
+export const E_KEY_HOTKEY_DIALOG_HOTKEYS_OPEN =
+  //
+  'e-key-hotkey-dialog-hotkeys-open'
+// Common, open dialog snippets
+export const E_KEY_HOTKEY_DIALOG_SNIPPETS_OPEN =
+  //
+  'e-key-hotkey-dialog-snippets-open'
+
 // CMD + S, Save Task, request get editor value
 export const E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE =
   //

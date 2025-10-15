@@ -11,6 +11,7 @@ import {
   DatasetKeyDragCardStatus,
 } from '@/constants'
 import { useJotaiDraggable, useJotaiShowdown } from '@/jotai'
+import { logger } from '@/utils/logger'
 
 import './index.scss'
 
@@ -37,7 +38,7 @@ export const UnitTaskCard = ({
       return
     }
 
-    console.log('Long pressed!')
+    logger('Long pressed!')
   })
 
   return (

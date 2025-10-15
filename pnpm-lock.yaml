@@ -32,6 +32,9 @@ importers:
       react-hotkeys-hook:
         specifier: ^5.1.0
         version: 5.1.0(react-dom@19.1.0(react@19.1.0))(react@19.1.0)
+      shine.js:
+        specifier: ^0.0.3
+        version: 0.0.3
       showdown:
         specifier: ^2.1.0
         version: 2.1.0
@@ -3580,6 +3583,9 @@ packages:
   shebang-regex@3.0.0:
     resolution: {integrity: sha512-7++dFhtcx3353uBaq8DDR4NuxBetBzC7ZQOhmTQInHEd6bSrXdiEyzCvG07Z44UYdLShWUyXt5M/yhz8ekcb1A==}
     engines: {node: '>=8'}
+
+  shine.js@0.0.3:
+    resolution: {integrity: sha512-6sEsvfUwVemSyau0yVZShfSbE4SWMIHcPxx3EfIIwLo+PbyMNc3mEVXGvF5yfoEJL3ot0U7PUta6/zkVl8j4pw==}
 
   showdown@2.1.0:
     resolution: {integrity: sha512-/6NVYu4U819R2pUIk79n67SYgJHWCce0a5xTP979WbNp0FL9MN1I1QK662IDU1b6JzKTvmhgI7T7JYIxBi3kMQ==}
@@ -7920,6 +7926,8 @@ snapshots:
       shebang-regex: 3.0.0
 
   shebang-regex@3.0.0: {}
+
+  shine.js@0.0.3: {}
 
   showdown@2.1.0:
     dependencies:

@@ -22,6 +22,7 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-hotkeys-hook": "^5.1.0",
+    "shine.js": "^0.0.3",
     "showdown": "^2.1.0",
     "toastify-js": "^1.12.0",
     "use-long-press": "^3.3.0",
