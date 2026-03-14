@@ -51,6 +51,7 @@ export const HotKeysMap: Record<
     type: 'update_state',
     stateKey: PageModeMap.DrawMode,
   },
+  // TODO - 要有前提，否则会生成空任务
   taskSave: {
     keys: 'meta+s',
     label: '⌘ + S',
