@@ -19,17 +19,16 @@ export const PageModeMap = {
 
 export type T_PageMode = (typeof PageModeMap)[keyof typeof PageModeMap]
 
-export const HotKeysMap: Record<
-  string,
-  {
-    keys: string
-    label: string
-    description: string
-    type: 'event_bus' | 'update_state'
-    eventBusKey?: string
-    stateKey?: T_PageMode
-  }
-> = {
+export type T_HotKeyEntry = {
+  keys: string
+  label: string
+  description: string
+  type: 'event_bus' | 'update_state'
+  eventBusKey?: string
+  stateKey?: T_PageMode
+}
+
+export const HotKeysMap: Record<string, T_HotKeyEntry> = {
   tips: {
     keys: 'meta+k',
     label: '⌘ + K',
@@ -66,6 +65,26 @@ export const HotKeysMap: Record<
     type: 'event_bus',
     eventBusKey: E_KEY_HOTKEY_DIALOG_SNIPPETS_OPEN,
   },
+}
+
+/** 由 HotKeysMap 衍生的快捷键列表与 keys 查表，供单次 useHotkeys 使用，仅改 HotKeysMap 即可生效 */
+export const HotKeysList = Object.values(HotKeysMap)
+export const HotKeysKeysString = HotKeysList.map((e) => e.keys).join(',')
+/** keys 字符串 -> 配置项，用于回调里根据 event 解析出的 keys 查表 */
+export const HotKeysByKeys = new Map(HotKeysList.map((e) => [e.keys, e]))
+
+const MODIFIER_KEYS = new Set(['meta', 'ctrl', 'control', 'alt', 'shift'])
+
+/** 从 KeyboardEvent 生成与 HotKeysMap 中 keys 同格式的字符串，用于查 HotKeysByKeys */
+export function getKeysStringFromKeyboardEvent(e: KeyboardEvent): string {
+  const parts: string[] = []
+  if (e.metaKey) parts.push('meta')
+  if (e.ctrlKey) parts.push('ctrl')
+  if (e.altKey) parts.push('alt')
+  if (e.shiftKey) parts.push('shift')
+  const key = e.key.length === 1 ? e.key.toLowerCase() : e.key.toLowerCase()
+  if (key && !MODIFIER_KEYS.has(key) && !parts.includes(key)) parts.push(key)
+  return parts.join('+')
 }
 
 export const DropEndStateForCardNewStateMap: Record<

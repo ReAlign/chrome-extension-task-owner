@@ -5,19 +5,12 @@ import {
 } from 'react'
 import { useHotkeys } from 'react-hotkeys-hook'
 
-import {
-  //
-  T_PageMode,
-  //
-  PageModeMap,
-  HotKeysMap,
-} from '@/constants'
+import { T_PageMode, PageModeMap, HotKeysKeysString, HotKeysByKeys, getKeysStringFromKeyboardEvent } from '@/constants'
 import { ModuleFullTip } from '@/components/module-full-tip'
 import { ModuleFullTask } from '@/components/module-full-task'
 import { ModuleFullDraw } from '@/components/module-full-draw'
 import { DialogHotkeys, DialogSnippets } from '@/components/dialogs'
 import {
-  //
   EventBus,
   E_KEY_HOTKEY_META_S_REQUEST_GET_VALUE_RESPONSE,
   E_KEY_FROM_TOP_TO_DRAGGABLE_SAVE_NEW_VALUE,
@@ -53,19 +46,25 @@ export const NewTabPage = () => {
     }
   }
 
-  Object.values(HotKeysMap).forEach(({ keys, type, stateKey, eventBusKey }) => {
-    useHotkeys(keys, (evt) => {
+  // 单次 useHotkeys 注册 HotKeysMap 中全部快捷键，符合 Hooks 规则；后续只改 HotKeysMap 即可生效
+  useHotkeys(
+    HotKeysKeysString,
+    (evt) => {
       evt.preventDefault()
+      // 从组合按键事件中获取对应的快捷键配置项
+      const entry = HotKeysByKeys.get(getKeysStringFromKeyboardEvent(evt))
 
-      if (type === 'update_state' && stateKey) {
-        updatePageModeState(stateKey)
-      } else if (type === 'event_bus' && eventBusKey) {
-        EventBus.emit(eventBusKey)
-      } else {
-        //
+      if (!entry) return
+
+      if (entry.type === 'update_state' && entry.stateKey) {
+        updatePageModeState(entry.stateKey)
+      } else if (entry.type === 'event_bus' && entry.eventBusKey) {
+        EventBus.emit(entry.eventBusKey)
       }
-    })
-  })
+    },
+    { preventDefault: true },
+    [updatePageModeState],
+  )
 
   useEffect(() => {
     const metaSRequestVditorValueResponseHandler = ({
